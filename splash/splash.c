@@ -1,8 +1,10 @@
 /*
-From: https://gist.github.com/FredEckert/3425429
-To test that the Linux framebuffer is set up correctly, and that the device permissions
-are correct, use the program below which opens the frame buffer and draws a gradient-
-filled red square:
+Splash by Bryce Bejlovec and Owen Sapp
+
+Simplistic water ripple simulation 'toy' utilizing Adafruit 2.4" display
+Requires ADS7846 touch screen and ADXL345 accelerometer
+
+Framebuffer Modification based on: https://gist.github.com/FredEckert/3425429:
 
 retrieved from:
 Testing the Linux Framebuffer for Qtopia Core (qt4-x11-4.2.2)
@@ -64,16 +66,14 @@ int readAxis(FILE* axis){
 }
 
 void parseInput(signed char motionVec[][60][2]){
-    // printf("balls\n");
     FD_ZERO(&touchrd);
     FD_SET(touchfd,&touchrd);
     touchtimer.tv_sec = 0;
-    touchtimer.tv_usec = 1000;
+    touchtimer.tv_usec = 100;
     select(touchfd+1, &touchrd,NULL,NULL,&touchtimer);
 
     
     if(touchtimer.tv_usec == 0){
-        // printf("timer=%d\n",touchtimer.tv_usec);
         return;
     }
     int x = 0;
@@ -130,91 +130,6 @@ void writeFrame(unsigned char frame[][60][3]){
     }
     // usleep(100000);
 }
-
-// void iterateVec(signed char motionVec[][60][2]){
-//     signed char oldVec[80][60][2];
-//     for(signed int i = 0; i < 80; i++){
-//         for(signed int j = 0; j < 60; j++){
-//             oldVec[i][j][0] = motionVec[i][j][0];
-//             oldVec[i][j][1] = motionVec[i][j][1];
-//             motionVec[i][j][0] = 0;
-//             motionVec[i][j][1] = 0;
-//         }
-//     }
-//     for(signed int i = 0; i < 80; i++){
-//         for(signed int j = 0; j < 60; j++){
-//             signed int xdir = (oldVec[i][j][0] > 0) - (oldVec[i][j][0] < 0);
-//             signed int ydir = (oldVec[i][j][1] > 0) - (oldVec[i][j][1] < 0);
-//             signed int xmod = (i == 79) - (i == 0);
-//             signed int ymod = (j == 59) - (j == 0);
-//             // when xmod or ymod = +1, it is at the farthest edge, when -1, at 0
-//             if(xdir ==  xmod){
-//                 xdir = 0;
-//                 xmod = -3;
-//             }else{
-//                 motionVec[(int)(i+xdir)][j][0] = motionVec[(int)(i+xdir)][j][0] + (oldVec[i][j][0]/2);
-//                 xmod = 1;
-//             }
-//             if(ydir ==  ymod){
-//                 ydir = 0;
-//                 ymod = -3;
-//             }else{
-//                 motionVec[i][(int)(j+ydir)][1] = motionVec[i][(int)(j+ydir)][1] + (oldVec[i][j][1]/2);
-//                 ymod = 1;
-//             }
-
-//             motionVec[i][j][0] = motionVec[i][j][0] + xmod*oldVec[i][j][0]/2;
-//             motionVec[i][j][1] = motionVec[i][j][1] + ymod*oldVec[i][j][1]/2;
-//             if(xdir != 0 && ydir != 0){
-//                 motionVec[(int)(i+xdir)][(int)(j+ydir)][0] = motionVec[(int)(i+xdir)][(int)(j+ydir)][0] + (oldVec[i][j][0]/4);
-//                 motionVec[(int)(i+xdir)][(int)(j+ydir)][1] = motionVec[(int)(i+xdir)][(int)(j+ydir)][1] + (oldVec[i][j][1]/4);
-//             }
-//         }
-//     }
-// }
-
-// void iterateVec(signed char motionVec[][60][2]){
-//     signed char oldVec[80][60][2];
-//     for(signed int i = 0; i < 80; i++){
-//         for(signed int j = 0; j < 60; j++){
-//             oldVec[i][j][0] = motionVec[i][j][0];
-//             oldVec[i][j][1] = motionVec[i][j][1];
-//             motionVec[i][j][0] = 0;
-//             motionVec[i][j][1] = 0;
-//         }
-//     }
-//     for(signed int i = 0; i < 80; i++){
-//         for(signed int j = 0; j < 60; j++){
-//             signed int xdir = (oldVec[i][j][0] > 0) - (oldVec[i][j][0] < 0);
-//             signed int ydir = (oldVec[i][j][1] > 0) - (oldVec[i][j][1] < 0);
-//             signed int xmod = (i == 79) - (i == 0);
-//             signed int ymod = (j == 59) - (j == 0);
-//             // when xmod or ymod = +1, it is at the farthest edge, when -1, at 0
-//             if(xdir ==  xmod){
-//                 // xdir = 0;
-//                 xmod = -3;
-//                 motionVec[i][j][0] = motionVec[i][j][0] + xmod*oldVec[i][j][0]/2;
-//             }else{
-//                 // motionVec[i][j][0] = motionVec[i][j][0]/2 + oldVec[i][j][0]/4;
-//                 motionVec[i+xdir][j][0] = motionVec[i+xdir][j][0] + (oldVec[i][j][0]/2);
-//                 motionVec[i+xdir][j-1][0] = motionVec[i+xdir][j-1][0] + (oldVec[i][j][0]/4);
-//                 motionVec[i+xdir][j+1][0] = motionVec[i+xdir][j+1][0] + (oldVec[i][j][0]/4);
-//                 // xmod = 1;
-//             }
-//             if(ydir ==  ymod){
-//                 // ydir = 0;
-//                 ymod = -3;
-//                 motionVec[i][j][1] = motionVec[i][j][1] + ymod*oldVec[i][j][1]/2;
-//             }else{
-//                 // motionVec[i][j][1] = motionVec[i][j][1]/2 + oldVec[i][j][1]/4;
-//                 motionVec[i][j+ydir][1] = motionVec[i][j+ydir][1] + (oldVec[i][j][1]/2);
-//                 motionVec[i-1][j+ydir][1] = motionVec[i-1][j+ydir][1] + (oldVec[i][j][1]/4);
-//                 motionVec[i+1][j+ydir][1] = motionVec[i+1][j+ydir][1] + (oldVec[i][j][1]/4);
-//                 // ymod = 1;
-//             }
-//         }
-//     }
-// }
 
 void iterateVec(signed char motionVec[][60][2],signed char prevVec[][60][2]){
     signed char curVec[82][62][2] = { [0][0][0] = 0 };
