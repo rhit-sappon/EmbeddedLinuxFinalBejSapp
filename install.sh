@@ -50,8 +50,8 @@ cp ./init/${TOUCH}.dts ${OVERLAYPATH}${DTSPATH}
 cd ${OVERLAYPATH}
 make ${DTSPATH}${LCD}.dtbo
 make ${DTSPATH}${TOUCH}.dtbo
-cp ./${DTSPATH}${LCD}.dtbo ${FIRMPATH}
-cp ./${DTSPATH}${TOUCH}.dtbo ${FIRMPATH}
+sudo cp ./${DTSPATH}${LCD}.dtbo ${FIRMPATH}
+sudo cp ./${DTSPATH}${TOUCH}.dtbo ${FIRMPATH}
 make clean
 cd ../
 
