@@ -40,7 +40,7 @@ FIRMPATH='/lib/firmware/'
 OVERLAYPATH='./bb.org-overlays/'
 DTSPATH='src/arm/'
 LCD='BB-LCD-ADAFRUIT-24-SPI1-00A0'
-TOUCH='BB-ADS7856-00A0'
+TOUCH='BB-ADS7846-00A0'
 
 ./init/setupgyro.sh
 
@@ -50,8 +50,8 @@ cp ./init/${TOUCH}.dts ${OVERLAYPATH}${DTSPATH}
 cd ${OVERLAYPATH}
 make ${LCD}.dtbo
 make ${TOUCH}.dtbo
-cp ./${DTSPATH}${LCD} ${FIRMPATH}
-cp ./${DTSPATH}${TOUCH} ${FIRMPATH}
+cp ./${DTSPATH}${LCD}.dtbo ${FIRMPATH}
+cp ./${DTSPATH}${TOUCH}.dtbo ${FIRMPATH}
 make clean
 cd ../
 
