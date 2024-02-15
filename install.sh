@@ -48,8 +48,8 @@ TOUCH='BB-ADS7846-00A0'
 git clone git@github.com:beagleboard/bb.org-overlays.git
 cp ./init/${TOUCH}.dts ${OVERLAYPATH}${DTSPATH} 
 cd ${OVERLAYPATH}
-make ${LCD}.dtbo
-make ${TOUCH}.dtbo
+make ${DTSPATH}${LCD}.dtbo
+make ${DTSPATH}${TOUCH}.dtbo
 cp ./${DTSPATH}${LCD}.dtbo ${FIRMPATH}
 cp ./${DTSPATH}${TOUCH}.dtbo ${FIRMPATH}
 make clean
