@@ -33,8 +33,10 @@
 # P9.22 <--> T_CLK
 #
 # I2C Gyro (ADXL345):
-# GND   <--> GND and SDO
-# 3.3v  <--> VCC and CS
+# GND   <--> GND
+# 3.3v  <--> VCC
+# 3.3v  <--> CS
+# GND   <--> SDO
 # P9.20 <--> SDA
 # P9.19 <--> SCL
 #
