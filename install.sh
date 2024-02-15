@@ -56,7 +56,9 @@ make clean
 cd ../
 
 # Install overlays - MODIFIES /boot/uEnv.txt!!!
-
+sudo sed -i -re 's/(#?)(dis(.+)video).+?/\2=1/' /boot/uEnv.txt
+sudo sed -i -re 's/(#{1}?)(u.+addr4=).+?/\2\/lib\/firmware\/BB\-LCD\-ADAFRUIT\-24\-SPI\-00A0\.dtbo/' /boot/uEnv.txt
+sudo sed -i -re 's/(#?)(u.+addr5=).+?/\2\/lib\/firmware\/BB\-ADS7846\-00A0\.dtbo/' /boot/uEnv.txt
 
 # Compile Splash
 gcc -o ./splash/splash ./splash/splash.c
