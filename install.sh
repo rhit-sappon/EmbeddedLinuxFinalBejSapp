@@ -33,8 +33,11 @@
 # P9.22 <--> T_CLK
 #
 # I2C Gyro (ADXL345):
+# GND   <--> GND and SDO
+# 3.3v  <--> VCC and CS
+# P9.20 <--> SDA
+# P9.19 <--> SCL
 #
-
 
 FIRMPATH='/lib/firmware/'
 OVERLAYPATH='./bb.org-overlays/'
@@ -52,7 +55,6 @@ make ${DTSPATH}${LCD}.dtbo
 make ${DTSPATH}${TOUCH}.dtbo
 sudo cp ./${DTSPATH}${LCD}.dtbo ${FIRMPATH}
 sudo cp ./${DTSPATH}${TOUCH}.dtbo ${FIRMPATH}
-make clean
 cd ../
 
 # Install overlays - MODIFIES /boot/uEnv.txt!!!
