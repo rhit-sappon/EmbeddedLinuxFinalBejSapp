@@ -1,0 +1,94 @@
+/*
+ * This file was based on the work by Ankit Daftery for
+ * an ADS7846 overlay for the BeagleBone Black.
+ * Derived Work:
+ * https://gist.github.com/ankitdaf/09e79800801bec027197
+ *
+ *
+ * Reworked and updated by Bryce Bejlovec for use with the 
+ * 2.4" Adafruit TFT Display touch screen
+ *
+ * Connected to SPI0 bus:
+ *
+ *   P9.23 <--> T_IRQ (gpio)
+ *   P9.18 <--> T_DO
+ *   P9.21 <--> T_DIN
+ *   P9.17 <--> T_CS
+ *   P9.22 <--> T_CLK
+ *
+ * Tested with kernel 5.10.168-ti-r72 on Debian 12 image.
+ */
+
+/dts-v1/;
+/plugin/;
+
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/interrupt-controller/irq.h>
+#include <dt-bindings/pinctrl/am33xx.h>
+#include <dt-bindings/board/am335x-bbw-bbb-base.h>
+
+/*
+ * Helper to show loaded overlays under: /proc/device-tree/chosen/overlays/
+ */
+&{/chosen} {
+	overlays {
+		BB-ADS7846-00A0 = __TIMESTAMP__;
+	};
+};
+
+/*
+ * Free up the pins used by the cape from the pinmux helpers.
+ */
+&ocp {
+	P9_23_pinmux { status = "disabled"; };	/* pendown */
+	P9_17_pinmux { status = "disabled"; };	/* spi0_cs0 */
+	P9_21_pinmux { status = "disabled"; };	/* spi0_d0 */
+	P9_18_pinmux { status = "disabled"; };	/* spi0_d1 */
+	P9_22_pinmux { status = "disabled"; };	/* spi0_sclk */
+};
+
+&am33xx_pinmux {
+	ads7846_pins:pinmux_spi0_pins {
+		pinctrl-single,pins = <
+	BONE_P9_22 0x30 /* spi0_sclk, INPUT_PULLUP | MODE0 */
+	BONE_P9_21 0x10 /* spi0_d0, OUTPUT_PULLUP | MODE0 */
+	BONE_P9_18 0x30 /* spi0_d1, INPUT_PULLUP | MODE0 */
+	/* For ADS7846 */
+	BONE_P9_17 0x10 /* spi0_cs0, OUTPUT_PULLUP | MODE0 */
+		>;
+	};
+};
+
+&spi0 {
+	#address-cells = <0x1>;
+	#size-cells = <0>;
+	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&ads7846_pins>;
+	ti,pindir-d0-out-d1-in = <1>;
+	ads7846@0 {
+		status = "okay";
+		compatible = "ti,ads7846";
+		spi-max-frequency = <100000>;   /* Higher frequency causes more jitter */
+		interrupts = <17 IRQ_TYPE_EDGE_FALLING>;             /* pin number 17 and falling edge interrupt */
+		interrupt-parent = <&gpio1>;
+		pendown-gpio = <&gpio1 17 GPIO_ACTIVE_LOW>;        /* This corresponds to pin no 23 = GPIO1[17]*/
+		reg = <0>;     /* We are using chip select 0, so we enter 0 here */
+		#addr-size = <2>;
+		#page-size = <32>;
+
+		/* driver defaults */
+		ti,x-min = /bits/ 16 <0xB0>;
+		ti,y-min = /bits/ 16 <0x231>;
+		ti,x-max = /bits/ 16 <0xF49>;
+		ti,y-max = /bits/ 16 <0xF6B>;
+		ti,pressure-min = /bits/ 16 <0>;
+		ti,pressure-max = /bits/ 16 <0xFF>;
+		ti,x-plate-ohms = /bits/ 16 <0x96>;
+		ti,swap_xy = /bits/ 16 <0>;
+		ti,keep_vref_on = /bits/ 16 <0>;
+		ti,cs = /bits/ 16 <1>;
+		linux,wakeup;
+	};
+};
+
