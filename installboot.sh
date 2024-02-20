@@ -4,8 +4,8 @@
 # tree overlays for the BeagleBone Black in order to run
 # the 'Splash' water simulation toy on boot using systemd.
 # 
-# If you wish to run the water simulation on boot, the file
-# named 'installBOOT.sh' should be run instead.
+# If you wish to run the water simulation manually, the file
+# named 'install.sh' should be run instead.
 #
 # WARNING: This file will modify your /boot/uEnv.txt to install the needed
 # overlays. Disable the associated lines and do the modification manually
@@ -67,7 +67,7 @@ sudo sed -i -re 's/(#{1}?)(u.+addr5=).+?/\2\/lib\/firmware\/BB\-ADS7846\-00A0\.d
 # Compile Splash
 gcc -o ./splash/splash ./splash/splash.c
 
-sudo cp ./splash.service /etc/systemd/system
+sudo cp ./splash.service /lib/systemd/system
 
 sudo cp ./splash/splash /usr/sbin
 sudo cp ./init/setupgyro.sh /usr/sbin

@@ -5,7 +5,7 @@
 # the 'Splash' water simulation toy.
 # 
 # If you wish to run the water simulation on boot, the file
-# named 'installBOOT.sh' should be run instead.
+# named 'install.sh' should be run instead.
 #
 # WARNING: This file will modify your /boot/uEnv.txt to install the needed
 # overlays. Disable the associated lines and do the modification manually
