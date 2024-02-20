@@ -1,0 +1,10 @@
+[Unit]
+Description=Splash Water Sim Toy
+
+[Service]
+WorkingDirectory=/usr/bin
+ExecStart=/usr/bin/splash
+SyslogIdentifier=splash
+
+[Install]
+WantedBy=multi-user.target

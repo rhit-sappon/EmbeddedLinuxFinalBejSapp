@@ -67,3 +67,10 @@ sudo sed -i -re 's/(#{1}?)(u.+addr5=).+?/\2\/lib\/firmware\/BB\-ADS7846\-00A0\.d
 # Compile Splash
 gcc -o ./splash/splash ./splash/splash.c
 
+sudo cp ./splash.service /etc/systemd/system
+
+sudo cp ./splash/splash /usr/sbin
+sudo cp ./init/setupgyro.sh /usr/sbin
+sudo systemctl enable splash
+sudo systemctl start splash
+
