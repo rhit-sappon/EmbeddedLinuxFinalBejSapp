@@ -2,7 +2,7 @@
 # ////////////////////////////////////
 # Running this script will compile and install the necessary device 
 # tree overlays for the BeagleBone Black in order to run
-# the 'Splash' water simulation toy.
+# the 'Splash' water simulation toy on boot using systemd.
 # 
 # If you wish to run the water simulation on boot, the file
 # named 'installBOOT.sh' should be run instead.
